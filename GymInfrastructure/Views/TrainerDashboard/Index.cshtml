@@ -1,0 +1,100 @@
+﻿@model IEnumerable<GymDomain.Model.Training>
+@{
+    ViewData["Title"] = "Мої тренування";
+}
+
+<style>
+    body {
+        background-color: #0d0d0d;
+        color: #f5f5f5;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        color: #ff4500;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .training-card {
+        background-color: #1a1a1a;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 15px rgba(255, 69, 0, 0.25);
+    }
+
+    .training-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+        .training-header h4 {
+            color: #ff6622;
+            margin: 0;
+        }
+
+    .client-list {
+        background-color: #121212;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 10px;
+    }
+
+        .client-list ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .client-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #333;
+        }
+
+    .count {
+        background-color: #ff4500;
+        color: white;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-weight: bold;
+    }
+</style>
+
+<h2>Мої тренування</h2>
+
+@if (!Model.Any())
+{
+    <p class="text-center text-muted">Поки що немає запланованих тренувань.</p>
+}
+else
+{
+    foreach (var t in Model)
+    {
+        <div class="training-card">
+            <div class="training-header">
+                
+                <span>@t.Date.ToShortDateString() @t.StartTime</span>
+            </div>
+
+           
+            <p><strong>Кількість учасників:</strong> <span class="count">@t.TrainingRegistrations.Count()</span></p>
+
+            @if (t.TrainingRegistrations.Any())
+            {
+                <div class="client-list">
+                    <h6>Записані учасники:</h6>
+                    <ul>
+                        @foreach (var r in t.TrainingRegistrations)
+                        {
+                            <li> (@r.Client?.Email)</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    }
+}

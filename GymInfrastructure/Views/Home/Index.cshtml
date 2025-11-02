@@ -1,0 +1,212 @@
+﻿@{
+    ViewData["Title"] = "Energy Gym";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    body {
+    background-color: #0d0d0d;
+    color: #f5f5f5;
+    font-family: 'Poppins', sans-serif;
+    }
+
+    /* HERO SECTION */
+    .hero {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    }
+
+    /* --- Відео фон --- */
+    .hero video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.4);
+    }
+
+    .hero .content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    padding: 20px;
+    }
+
+    .hero h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    }
+
+    .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    }
+
+    .btn-hero {
+    background-color: #ff4500;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    transition: 0.3s;
+    }
+
+    .btn-hero:hover {
+    background-color: #ff6622;
+    transform: scale(1.05);
+    }
+
+    /* TRAINERS SCROLL */
+    .trainers-section {
+    padding: 60px 0;
+    }
+
+    .trainers-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    scroll-behavior: smooth;
+    padding: 20px;
+    }
+
+    .trainer-card {
+    flex: 0 0 auto;
+    background-color: #1a1a1a;
+    border-radius: 15px;
+    overflow: hidden;
+    width: 260px;
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
+    transition: 0.3s;
+    }
+
+    .trainer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+    }
+
+    .trainer-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    }
+
+    .trainer-card .card-body {
+    padding: 15px;
+    text-align: center;
+    }
+
+    .trainer-card h5 {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    }
+
+    .trainer-card a {
+    color: #ff4500;
+    text-decoration: none;
+    font-weight: 500;
+    }
+
+    .trainer-card a:hover {
+    text-decoration: underline;
+    }
+</style>
+
+
+<section class="hero">
+    <video autoplay muted loop playsinline poster="https://images.pexels.com/photos/414029/pexels-photo-414029.jpeg?auto=compress&cs=tinysrgb&w=1920">
+        <source src="https://videos.pexels.com/video-files/3757372/3757372-hd_1920_1080_24fps.mp4" type="video/mp4">
+        Ваш браузер не підтримує відео тег.
+    </video>
+
+    <div class="content text-center">
+        <h1>Energy Gym</h1>
+        <p>
+            Місце, де сила зустрічається з мотивацією.<br />
+            Приєднуйся до нашої спільноти та досягни найкращої версії себе!
+        </p>
+        <a href="/Schedule/Index" class="btn-hero">Переглянути розклад</a>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+@if (User.IsInRole("Trainer"))
+{
+    <div class="container text-center my-5">
+        <h2 class="mb-4">Статистика відвідувань</h2>
+        <canvas id="visitsChart" height="120"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+        const response = await fetch('/Home/GetTrainingStats');
+        const data = await response.json();
+
+
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const hours = Array.from({ length: 14 }, (_, i) => i + 6); 
+
+        const matrix = hours.map(hour => {
+        return days.map(day => {
+        const match = data.find(d => d.day === day && d.hour === hour);
+        return match ? match.count : 0;
+        });
+        });
+
+
+        new Chart(document.getElementById("visitsChart"), {
+        type: 'bar',
+        data: {
+        labels: hours.map(h => `${h}:00`),
+        datasets: days.map((day, i) => ({
+        label: day,
+        data: matrix.map(row => row[i]),
+        backgroundColor: `hsl(${i * 50}, 70%, 50%)`,
+        stack: 'combined'
+        }))
+        },
+        options: {
+        responsive: true,
+        plugins: {
+        title: {
+        display: true,
+
+        color: 'white'
+        },
+        legend: {
+        labels: {
+        color: 'white'
+        }
+        }
+        },
+        scales: {
+        x: {
+        stacked: true,
+        ticks: { color: 'white' }
+        },
+        y: {
+        stacked: true,
+        ticks: { color: 'white' }
+        }
+        }
+        }
+        });
+        });
+    </script>
+}
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,0 +1,172 @@
+﻿@model IEnumerable<GymDomain.Model.Training>
+
+<style>
+    /* Контейнер */
+    .trainings-container {
+        padding: 40px 0;
+    }
+
+    /* Картки */
+    .training-card {
+        background-color: #1a1a1a;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(255, 69, 0, 0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+        .training-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 25px rgba(255, 69, 0, 0.3);
+        }
+
+        .training-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .training-card .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .training-card h5 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .training-card p {
+            color: #ccc;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .training-card strong {
+            color: #ff4500;
+        }
+
+        .training-card .text-truncate {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Кнопки */
+        .training-card .btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 8px 16px;
+            transition: 0.3s;
+        }
+
+        .training-card .btn-primary {
+            background-color: #ff4500;
+            border: none;
+        }
+
+            .training-card .btn-primary:hover {
+                background-color: #ff6622;
+                transform: translateY(-2px);
+            }
+
+        .training-card .btn-warning {
+            background-color: #ffa500;
+            border: none;
+            color: #1a1a1a;
+        }
+
+            .training-card .btn-warning:hover {
+                background-color: #ffb733;
+                transform: translateY(-2px);
+            }
+
+        .training-card .btn-danger {
+            background-color: #d62828;
+            border: none;
+        }
+
+            .training-card .btn-danger:hover {
+                background-color: #e63946;
+                transform: translateY(-2px);
+            }
+
+        /* Вирівнювання кнопок */
+        .training-card .btn-group {
+            margin-top: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+    /* Ряди */
+    .trainings-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+
+    .training-card-wrapper {
+        flex: 1 1 calc(33.333% - 25px);
+        min-width: 280px;
+    }
+
+    @@media (max-width: 992px) {
+        .training-card-wrapper
+
+    {
+        flex: 1 1 calc(50% - 20px);
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .training-card-wrapper
+
+    {
+        flex: 1 1 100%;
+    }
+
+    }
+</style>
+
+<div class="trainings-container">
+    <div class="trainings-row">
+        @foreach (var t in Model)
+        {
+            <div class="training-card-wrapper">
+                <div class="training-card">
+                    @if (!string.IsNullOrEmpty(t.PhotoUrl))
+                    {
+                        <img src="@t.PhotoUrl" alt="@t.Title" />
+                    }
+
+                    <div class="card-body">
+                        <h5>@t.Title</h5>
+                        <p><strong>Тренер:</strong> @t.Trainer.FirstName @t.Trainer.LastName</p>
+                        <p><strong>Час:</strong> @t.StartTime.ToString("HH:mm")</p>
+                        <p><strong>Тривалість:</strong> @(t.DurationMinutes ?? 60) хв</p>
+                        <p class="text-truncate">@t.Description</p>
+
+                        <div class="btn-group mt-auto">
+                            <a asp-controller="Schedule" asp-action="Details" asp-route-id="@t.Id" class="btn btn-primary btn-sm">Деталі</a>
+
+                            @if (User.IsInRole("Trainer"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-warning btn-sm">Редагувати</a>
+                                <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger btn-sm">Видалити</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

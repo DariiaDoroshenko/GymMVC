@@ -1,0 +1,168 @@
+﻿@model GymDomain.Model.Training
+@{
+    ViewData["Title"] = "Редагувати тренування";
+}
+
+<style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    .edit-container {
+        max-width: 800px;
+        margin: 80px auto;
+        background: rgba(30, 30, 30, 0.9);
+        backdrop-filter: blur(8px);
+        padding: 40px 50px;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .edit-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+        }
+
+    h2 {
+        text-align: center;
+        color: #ff4500;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #ff6622;
+    }
+
+    input.form-control,
+    select.form-control,
+    textarea.form-control {
+        background-color: rgba(40, 40, 40, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px 14px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        input.form-control:focus,
+        select.form-control:focus,
+        textarea.form-control:focus {
+            border-color: #ff4500;
+            box-shadow: 0 0 6px rgba(255, 69, 0, 0.4);
+            outline: none;
+        }
+
+    .btn {
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 10px 24px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #ff4500;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #ff6622;
+            transform: translateY(-2px);
+        }
+
+    .btn-secondary {
+        background-color: #333;
+        border: none;
+        margin-left: 10px;
+    }
+
+        .btn-secondary:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
+
+    .text-danger {
+        font-size: 0.9rem;
+        color: #ff6b6b;
+    }
+
+    @@media (max-width: 768px) {
+        .edit-container
+
+    {
+        padding: 25px;
+        margin: 60px 15px;
+    }
+
+    }
+</style>
+
+<div class="edit-container">
+    <h2>@ViewData["Title"]</h2>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label asp-for="Title"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TrainerId">Тренер</label>
+            <select asp-for="TrainerId" asp-items="ViewBag.Trainers" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Date"></label>
+            <input asp-for="Date" type="date" class="form-control"
+                   value="@(Model.Date.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StartTime"></label>
+            <input asp-for="StartTime" type="time" class="form-control"
+                   value="@(Model.StartTime.ToString("HH:mm"))" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DurationMinutes"></label>
+            <input asp-for="DurationMinutes" type="number" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price"></label>
+            <input asp-for="Price" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="MaxClients"></label>
+            <input asp-for="MaxClients" type="number" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-3">Зберегти зміни</button>
+            <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-secondary mt-3">Назад</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

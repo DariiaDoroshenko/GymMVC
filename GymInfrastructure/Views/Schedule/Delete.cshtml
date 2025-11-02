@@ -1,0 +1,17 @@
+﻿@model GymDomain.Model.Training
+@{
+    ViewData["Title"] = "Видалити тренування";
+}
+
+<h2>Видалити тренування</h2>
+
+<div class="alert alert-warning">
+    Ви впевнені, що хочете видалити <strong>@Model.Title</strong> (@Model.Date, @Model.StartTime.ToString("HH:mm"))?
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a asp-action="Index" asp-route-date="@Model.Date.ToString("yyyy-MM-dd")" class="btn btn-secondary">Назад</a>
+</form>

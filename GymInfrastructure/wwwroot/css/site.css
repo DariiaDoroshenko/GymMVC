@@ -1,0 +1,114 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.game-card {
+    background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
+    border-radius: 12px;
+    color: #f5f5f5;
+}
+
+.game-toolbar span {
+    font-weight: 600;
+    color: #fff;
+}
+
+.btn-outline-light {
+    color: #fff;
+    border-color: rgba(255,255,255,0.12);
+}
+
+/* --- Modal --- */
+.game-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+    .game-modal.show {
+        display: flex;
+    }
+
+.game-modal-content {
+    background: #222;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 25px rgba(255,107,0,0.5);
+}
+
+/* --- Buttons --- */
+.btn {
+    border: none;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-success {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+    .btn-success:hover {
+        background-color: #2ecc71;
+    }
+
+.btn-warning {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+    .btn-warning:hover {
+        background-color: #f1c40f;
+    }
+
+.btn-secondary {
+    background-color: #555;
+    color: #fff;
+}
+
+    .btn-secondary:hover {
+        background-color: #666;
+    }
+
+.btn-primary {
+    background-color: #ff6b00;
+    color: #fff;
+}
+
+    .btn-primary:hover {
+        background-color: #ff8533;
+    }

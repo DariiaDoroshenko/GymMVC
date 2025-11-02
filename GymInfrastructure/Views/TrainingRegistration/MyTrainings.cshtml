@@ -1,0 +1,182 @@
+﻿@model List<GymDomain.Model.TrainingRegistration>
+@{
+    ViewData["Title"] = "Мої тренування";
+    var archived = ViewBag.Archived as List<GymDomain.Model.TrainingRegistration>;
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    body {
+        background-color: #0d0d0d;
+        color: #f5f5f5;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+        margin-top: 80px;
+    }
+
+    h2 {
+        color: #ff4500;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    h4 {
+        color: #ff6622;
+        font-weight: 600;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+    }
+
+    .card {
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(255, 69, 0, 0.15);
+        overflow: hidden;
+        transition: all 0.4s ease;
+        background-color: #1a1a1a;
+        color: #f5f5f5;
+    }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 35px rgba(255, 69, 0, 0.4);
+        }
+
+        .card img {
+            height: 220px;
+            object-fit: cover;
+        }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        color: #ff4500;
+        font-weight: 600;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+
+    p {
+        margin-bottom: 8px;
+    }
+
+    .btn-outline-danger {
+        border-color: #ff4500;
+        color: #ff4500;
+        font-weight: 500;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #ff4500;
+            color: #fff;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.6);
+        }
+
+    .alert-info {
+        background-color: rgba(255, 69, 0, 0.1);
+        border: 1px solid #ff4500;
+        color: #fff;
+        border-radius: 10px;
+    }
+
+    .badge.bg-dark {
+        background-color: #222 !important;
+        border: 1px solid #ff4500;
+        color: #ff4500;
+        padding: 8px 14px;
+        border-radius: 25px;
+        font-weight: 500;
+    }
+
+    .card.bg-secondary {
+        background-color: #2a2a2a !important;
+    }
+
+    @@media (max-width: 768px) {
+        .card img {
+            height: 180px;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="container text-light">
+    <h2 class="text-center mb-5">Мої тренування</h2>
+
+    @if (ViewBag.Message != null)
+    {
+        <div class="alert alert-info text-center">@ViewBag.Message</div>
+    }
+
+    <h4 >Заплановані</h4>
+
+    @if (!Model.Any())
+    {
+        <p >Немає запланованих тренувань.</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var r in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="@r.Training.PhotoUrl" class="card-img-top" alt="@r.Training.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@r.Training.Title</h5>
+                            <p><strong>Тренер:</strong> @r.Training.Trainer.FirstName @r.Training.Trainer.LastName</p>
+                            <p><strong>Дата:</strong> @r.Training.Date.ToString("dd.MM.yyyy")</p>
+                            <p><strong>Час:</strong> @r.Training.StartTime.ToString("HH:mm")</p>
+                            <form asp-action="Cancel" method="post">
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Скасувати запис</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <h4 class="text-secondary mt-5">Архів</h4>
+
+    @if (archived == null || !archived.Any())
+    {
+        <p class="text-muted">Архів порожній.</p>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var r in archived)
+            {
+                <div class="col-md-4">
+                    <div class="card bg-secondary">
+                        <img src="@r.Training.PhotoUrl" class="card-img-top" alt="@r.Training.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title">@r.Training.Title</h5>
+                            <p><strong>Тренер:</strong> @r.Training.Trainer.FirstName @r.Training.Trainer.LastName</p>
+                            <p><strong>Дата:</strong> @r.Training.Date.ToString("dd.MM.yyyy")</p>
+                            <p><strong>Час:</strong> @r.Training.StartTime.ToString("HH:mm")</p>
+                            <span class="badge bg-dark">
+                                @(r.Status == "Canceled" ? "Скасовано" : "Завершено")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
