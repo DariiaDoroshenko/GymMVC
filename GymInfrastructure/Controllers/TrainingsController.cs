@@ -71,6 +71,22 @@ namespace GymInfrastructure.Controllers
 
             return View(vm);
         }
+        [HttpPost]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                return Ok("/uploads/" + file.FileName);
+            }
+
+            return BadRequest("Файл не завантажено");
+        }
+
 
     }
 }

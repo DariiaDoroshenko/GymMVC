@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Мапа спортпросторів";
+}
+
+<h2 style="text-align:center; margin-top:20px;">📍 Мапа спортпросторів</h2>
+
+
+<div id="map" style="width:100%; height:600px; border-radius:10px; margin-top:20px;"></div>
+
+
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+
+<script>
+    
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFyaWlhZG9yb3NoZW5rbyIsImEiOiJjbWhqb3B4ZHYwMDg4MmxzN3YwMHM5ODd2In0.ck6KACozH1_5MJj1WWSJGQ';
+
+    // 🗺️ Створюємо карту
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [30.5234, 50.4501], // Київ
+        zoom: 11
+    });
+
+    // 🏋️ Дані спорт просторів
+    const gyms = [
+        { name: "SportLife", coords: [30.5167, 50.4501], type: "Фітнес-клуб" },
+        { name: "X-Fit", coords: [30.5301, 50.4457], type: "Басейн" },
+        { name: "BodyArt", coords: [30.4902, 50.4603], type: "Тренажерка" },
+        { name: "Arena Gym", coords: [30.5123, 50.4305], type: "Зал єдиноборств" }
+    ];
+
+    // 🧭 Створюємо маркери для кожного
+    gyms.forEach(gym => {
+        const marker = new mapboxgl.Marker({ color: "#e63946" })
+            .setLngLat(gym.coords)
+            .setPopup(new mapboxgl.Popup().setHTML(`<b>${gym.name}</b><br>${gym.type}`))
+            .addTo(map);
+    });
+
+    // 🔍 Фільтр по типу (динамічно)
+    const filterContainer = document.createElement('div');
+    filterContainer.style.margin = '20px';
+    filterContainer.innerHTML = `
+        <label>Фільтр за типом:</label>
+        <select id="gymFilter">
+            <option value="all">Усі</option>
+            <option value="Фітнес-клуб">Фітнес-клуб</option>
+            <option value="Басейн">Басейн</option>
+            <option value="Тренажерка">Тренажерка</option>
+            <option value="Зал єдиноборств">Зал єдиноборств</option>
+        </select>
+    `;
+    document.body.prepend(filterContainer);
+
+    const select = document.getElementById("gymFilter");
+    select.addEventListener("change", () => {
+        const selected = select.value;
+
+        // Очистка карти
+        document.querySelectorAll('.mapboxgl-marker').forEach(m => m.remove());
+
+        // Знову додаємо маркери, але лише вибраного типу
+        gyms
+            .filter(gym => selected === "all" || gym.type === selected)
+            .forEach(gym => {
+                new mapboxgl.Marker({ color: "#457b9d" })
+                    .setLngLat(gym.coords)
+                    .setPopup(new mapboxgl.Popup().setHTML(`<b>${gym.name}</b><br>${gym.type}`))
+                    .addTo(map);
+            });
+    });
+</script>

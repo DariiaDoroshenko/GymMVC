@@ -157,12 +157,17 @@
 
                         <div class="btn-group mt-auto">
                             <a asp-controller="Schedule" asp-action="Details" asp-route-id="@t.Id" class="btn btn-primary btn-sm">Деталі</a>
+                           
+
 
                             @if (User.IsInRole("Trainer"))
                             {
                                 <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-warning btn-sm">Редагувати</a>
                                 <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-danger btn-sm">Видалити</a>
+
                             }
+                           
+
                         </div>
                     </div>
                 </div>

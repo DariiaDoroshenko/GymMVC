@@ -70,6 +70,10 @@ namespace GymInfrastructure.Controllers
         }
 
 
+        public IActionResult Map()
+        {
+            return View();
+        }
 
 
     }
