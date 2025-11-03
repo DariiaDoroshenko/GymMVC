@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Спільна дошка</title>
+</head>
+<body style="background-color:#f0f0f0; text-align:center;">
+
+    <h2>🖊 Спільна дошка для малювання</h2>
+
+    <canvas id="board" width="800" height="500"
+            style="border:2px solid black; background:white; cursor:crosshair;"></canvas>
+
+    <!-- ✅ ПРАВИЛЬНИЙ CDN SignalR -->
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.0/dist/browser/signalr.min.js"></script>
+
+
+    <script>
+        const canvas = document.getElementById("board");
+        const ctx = canvas.getContext("2d");
+        let drawing = false;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/drawingHub")
+            .build();
+
+        connection.on("ReceiveDrawing", (x, y) => {
+            ctx.fillStyle = "red";
+            ctx.fillRect(x, y, 4, 4);
+        });
+
+        connection.start()
+            .then(() => console.log("✅ SignalR connected"))
+            .catch(err => console.error("❌ SignalR connection error:", err));
+
+        canvas.addEventListener("mousedown", () => drawing = true);
+        canvas.addEventListener("mouseup", () => drawing = false);
+        canvas.addEventListener("mouseleave", () => drawing = false);
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!drawing) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.fillStyle = "red";
+            ctx.fillRect(x, y, 4, 4);
+
+            connection.invoke("SendDrawing", x, y).catch(err => console.error(err));
+        });
+    </script>
+
+</body>
+</html>

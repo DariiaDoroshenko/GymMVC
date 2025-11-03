@@ -64,6 +64,12 @@ namespace GymInfrastructure.Controllers
 
             return Json(stats);
         }
+        public IActionResult Whiteboard()
+        {
+            return View();
+        }
+
+
 
 
     }

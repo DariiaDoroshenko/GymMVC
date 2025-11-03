@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using GymDomain.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using GymInfrastructure.Hubs;  
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,11 +32,12 @@ builder.Services.AddAuthentication(options =>
 })
 .AddGoogle(options =>
 {
-    options.ClientId = "";
-    options.ClientSecret = "";
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     options.CallbackPath = "/signin-google";
 });
 
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -67,12 +70,17 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// 🧩 Дуже важливо: порядок має бути саме такий!
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<DrawingHub>("/drawingHub");
+
 
 app.Run();
